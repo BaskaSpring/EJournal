@@ -1,4 +1,4 @@
-package com.baska.web.Payload;
+package com.baska.web.Payloads.DaemonPayload;
 
 public class Disc {
 

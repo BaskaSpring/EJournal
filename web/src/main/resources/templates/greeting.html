@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.css}"/>
+
+</head>
+<body>
+<p th:text="'Hello, ' + ${name} + '!'" />
+<button type="button" class="btn btn-primary">Primary</button>
+<script th:src="@{/webjars/jquery/jquery.js}" th:text="''"/>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.js}" th:text="''"/>
+</body>
+</html>

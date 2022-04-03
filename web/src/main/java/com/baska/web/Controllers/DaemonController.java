@@ -3,9 +3,9 @@ package com.baska.web.Controllers;
 import com.baska.web.Models.ServerRefreshTime;
 import com.baska.web.Models.ServerScanPath;
 import com.baska.web.Models.Service;
-import com.baska.web.Payload.Computer;
-import com.baska.web.Payload.FilesPayload;
-import com.baska.web.Payload.PathPayload;
+import com.baska.web.Payloads.DaemonPayload.Computer;
+import com.baska.web.Payloads.DaemonPayload.FilesPayload;
+import com.baska.web.Payloads.DaemonPayload.PathPayload;
 import com.baska.web.Repository.ServerMeterRepository;
 import com.baska.web.Repository.ServerRefreshTimeRepository;
 import com.baska.web.Repository.ServerScanPathsRepository;
@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/api/v1")
+@RequestMapping("/apid/v1")
 @RestController
-public class AddRestController {
+public class DaemonController {
 
 
     @Autowired

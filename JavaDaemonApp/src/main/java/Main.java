@@ -118,9 +118,9 @@ public class Main {
 
     public static class _Files{
         String fileName;
-        Instant createDate;
+        Long createDate;
 
-        public _Files(String fileName, Instant createDate) {
+        public _Files(String fileName, Long createDate) {
             this.fileName = fileName;
             this.createDate = createDate;
         }
@@ -136,11 +136,11 @@ public class Main {
             this.fileName = fileName;
         }
 
-        public Instant getCreateDate() {
+        public Long getCreateDate() {
             return createDate;
         }
 
-        public void setCreateDate(Instant createDate) {
+        public void setCreateDate(Long createDate) {
             this.createDate = createDate;
         }
     }
@@ -201,7 +201,7 @@ public class Main {
                         String Payload = gson.toJson(computer);
                         request = HttpRequest.newBuilder()
                                 .POST(HttpRequest.BodyPublishers.ofString(Payload))
-                                .uri(URI.create("http://127.0.0.1:8001/api/v1/discspace"))
+                                .uri(URI.create("http://127.0.0.1:8001/apid/v1/discspace"))
                                 .version(HttpClient.Version.HTTP_2)
                                 .header("Content-Type", "application/json")
                                 .build();
@@ -234,7 +234,7 @@ public class Main {
                     try {
                         request = HttpRequest.newBuilder()
                                 .GET()
-                                .uri(URI.create("http://127.0.0.1:8001/api/v1/files?computerName="+compName))
+                                .uri(URI.create("http://127.0.0.1:8001/apid/v1/files?computerName="+compName))
                                 .version(HttpClient.Version.HTTP_2)
                                 .build();
                         response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -254,7 +254,7 @@ public class Main {
                                              files.setFileName(y.getFileName().toString());
                                              try {
                                                  FileTime creationTime = (FileTime) Files.getAttribute(y, "creationTime");
-                                                 files.setCreateDate(creationTime.toInstant());
+                                                 files.setCreateDate(creationTime.toInstant().getEpochSecond());
                                              } catch (IOException e) {
                                                  e.printStackTrace();
                                              }
@@ -271,7 +271,7 @@ public class Main {
                             String Payload = gson.toJson(filesPayload);
                             request = HttpRequest.newBuilder()
                                     .POST(HttpRequest.BodyPublishers.ofString(Payload))
-                                    .uri(URI.create("http://127.0.0.1:8001/api/v1/files"))
+                                    .uri(URI.create("http://127.0.0.1:8001/apid/v1/files"))
                                     .version(HttpClient.Version.HTTP_2)
                                     .header("Content-Type", "application/json")
                                     .build();

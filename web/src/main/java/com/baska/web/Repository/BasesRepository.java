@@ -11,6 +11,6 @@ import java.util.List;
 public interface BasesRepository extends JpaRepository<Bases,String> {
 
 
-    @Query("select x from bases as x")
+    @Query(value= "select * from bases as x",nativeQuery=true)
     List<Bases> getAll();
 }

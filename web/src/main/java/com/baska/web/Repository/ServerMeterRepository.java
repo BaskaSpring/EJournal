@@ -7,15 +7,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 
 
 @Repository
 public interface ServerMeterRepository extends JpaRepository<ServerMeter,String> {
-//
-//    @Query("SELECT e FROM ServerMeter as e WHERE e.timestamp < :time")
-//    Iterable<ServerMeter> getServerMeterList(@Param("time") Instant time);
 
-
+    @Query(value = "select * from meters as v where not (v.id in(select y.id from meters as y right join (select x.server_id,Max(x.timestamp) as ttt,x.disc_name from meters as x group by x.server_id, x.disc_name) as z on y.server_id=z.server_id and y.disc_name=z.disc_name and y.timestamp=z.ttt))", nativeQuery=true)
+    List<ServerMeter> getLastMeters();
 
 
 }

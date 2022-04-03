@@ -5,9 +5,9 @@ import com.baska.web.Models.Bases;
 import com.baska.web.Models.Files;
 import com.baska.web.Models.ServerMeter;
 import com.baska.web.Models.Servers;
-import com.baska.web.Payload.Disc;
-import com.baska.web.Payload.FilesPayload;
-import com.baska.web.Payload._Files;
+import com.baska.web.Payloads.DaemonPayload.Disc;
+import com.baska.web.Payloads.DaemonPayload.FilesPayload;
+import com.baska.web.Payloads.DaemonPayload._Files;
 import com.baska.web.Repository.BasesRepository;
 import com.baska.web.Repository.FilesRepository;
 import com.baska.web.Repository.ServerMeterRepository;
@@ -15,7 +15,7 @@ import com.baska.web.Repository.ServersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,29 +52,37 @@ public class CRUDService {
             return;
         }
         Servers server = server1.get();
-
         List<Files> enabledFiles = filesRepository.getEnableFiles();
         List<_Files> newFiles = filesPayload.getFilesList();
-        for (_Files file :newFiles){
-            for (Files enablefile: enabledFiles){
-                if (file.getFileName().equals(enablefile.getName())){
-                    enabledFiles.remove(enablefile);
-                    newFiles.remove(file);
+        boolean rem = false;
+        for (int i = 0; i <newFiles.size();i++) {
+            rem =false;
+            for (int j = 0; j <enabledFiles.size() ;j++ ) {
+                if (newFiles.get(i).getFileName().equals(enabledFiles.get(j).getName())) {
+                    enabledFiles.remove(j);
+                    newFiles.remove(i);
+                    rem = true;
+                    break;
                 }
             }
+            if (rem){i--;}
         }
-        for (Files files:enabledFiles){
-            files.setEnable(false);
-            filesRepository.save(files);
+        if (enabledFiles.size()>0) {
+            for (Files files : enabledFiles) {
+                files.setEnable(false);
+                filesRepository.save(files);
+            }
         }
         List<Bases> bases = basesRepository.getAll();
-        for (_Files files: newFiles){
-            Files newFile = new Files();
-            newFile.setDate(files.getCreateDate());
-            newFile.setName(files.getFileName());
-            newFile.setServerId(server.getId());
-            newFile.setBasesId(FindBase(files.getFileName(),bases));
-            filesRepository.save(newFile);
+        if ((bases.size()>0)||(newFiles.size()>0)) {
+            for (_Files files : newFiles) {
+                Files newFile = new Files();
+                newFile.setDate(Instant.ofEpochSecond(files.getCreateDate()));
+                newFile.setName(files.getFileName());
+                newFile.setServerId(server.getId());
+                newFile.setBasesId(FindBase(files.getFileName(), bases));
+                filesRepository.save(newFile);
+            }
         }
     }
 
@@ -82,10 +90,9 @@ public class CRUDService {
     public String FindBase(String fileName, List<Bases> bases){
         for(Bases base: bases){
             if (fileName.contains(base.getUniqString())){
-
+                return base.getId();
             }
         }
         return "";
     }
-
 }
